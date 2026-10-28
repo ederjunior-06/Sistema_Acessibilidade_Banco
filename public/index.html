@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>NovoBanco</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ── Moldura do celular ─────────────────────────────────── -->
+<div id="phone-frame">
+<div id="app">
+
+  <!-- ════════════════════════════════════════════════
+       TELA: LOGIN
+  ════════════════════════════════════════════════ -->
+  <div id="tela-login" class="tela ativa">
+    <div class="login-logo">Novo<span>Banco</span></div>
+    <p class="login-subtitle">Seu banco digital com assistente IA</p>
+    <div class="login-card">
+      <h2>Entrar</h2>
+      <p>Acesse sua conta com segurança</p>
+      <div class="form-group">
+        <label class="form-label" for="input-cpf">CPF</label>
+        <input id="input-cpf" class="form-input" type="text"
+          placeholder="000.000.000-00" value="123.456.789-00" maxlength="14" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="input-senha">Senha</label>
+        <input id="input-senha" class="form-input" type="password"
+          placeholder="••••••" value="1234" maxlength="6" />
+      </div>
+      <button id="btn-login" class="btn btn-primary btn-full">Entrar</button>
+      <p class="login-hint">CPF: 123.456.789-00 &nbsp;|&nbsp; Senha: 1234</p>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════
+       TELA: HOME (Dashboard)
+  ════════════════════════════════════════════════ -->
+  <div id="tela-dashboard" class="tela">
+    <header class="app-header">
+      <div class="logo">Novo<span>Banco</span></div>
+      <button class="btn-notif" title="Notificações">🔔</button>
+    </header>
+
+    <!-- Saldo -->
+    <div class="saldo-card">
+      <p class="saldo-greeting" id="dash-saudacao">Olá!</p>
+      <div class="saldo-valor" id="dash-saldo">R$ ••••••</div>
+      <p class="saldo-conta" id="dash-conta">Conta Corrente</p>
+      <button class="saldo-toggle" id="btn-toggle-saldo">👁 Mostrar saldo</button>
+    </div>
+
+    <!-- Ações rápidas com IDs pedidos -->
+    <div class="acoes-rapidas">
+      <button id="btn-pix" class="acao-btn" onclick="App.ir('pix')">
+        <span class="icon">📲</span>PIX
+      </button>
+      <button id="btn-extrato" class="acao-btn" onclick="App.ir('extrato')">
+        <span class="icon">📋</span>Extrato
+      </button>
+      <button id="btn-transferir" class="acao-btn" onclick="App.ir('ted')">
+        <span class="icon">🏦</span>Transferir
+      </button>
+      <button class="acao-btn" onclick="App.ir('cartao')">
+        <span class="icon">💳</span>Cartão
+      </button>
+    </div>
+
+    <!-- Últimas transações -->
+    <div class="card mt-8">
+      <p class="card-titulo">Últimas transações</p>
+      <div id="dash-transacoes"></div>
+      <button class="btn btn-outline btn-full btn-sm mt-8"
+        onclick="App.ir('extrato')">Ver extrato completo</button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════
+       TELA: EXTRATO
+  ════════════════════════════════════════════════ -->
+  <div id="tela-extrato" class="tela">
+    <header class="app-header">
+      <button class="btn-voltar" onclick="App.ir('dashboard')">← Voltar</button>
+      <div class="logo">Extrato</div>
+      <div style="width:60px"></div>
+    </header>
+    <div class="card" style="margin-top:14px">
+      <p class="card-titulo">Todas as transações</p>
+      <div id="extrato-lista"></div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════
+       TELA: PIX
+  ════════════════════════════════════════════════ -->
+  <div id="tela-pix" class="tela">
+    <header class="app-header">
+      <button class="btn-voltar" onclick="App.ir('dashboard')">← Voltar</button>
+      <div class="logo">PIX</div>
+      <div style="width:60px"></div>
+    </header>
+    <div class="form-transacao">
+      <h2>Enviar PIX</h2>
+      <p>Transferência instantânea 24h por dia</p>
+
+      <p class="card-titulo" style="margin-bottom:8px">Contatos</p>
+      <div class="contatos-lista" id="pix-contatos"></div>
+
+      <div class="form-group">
+        <label class="form-label" for="pix-chave">Ou digite a chave PIX</label>
+        <input id="pix-chave" class="form-input" type="text"
+          placeholder="CPF, e-mail, telefone..." />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="pix-valor">Valor (R$)</label>
+        <input id="pix-valor" class="form-input" type="number"
+          placeholder="0,00" min="0.01" step="0.01" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="pix-descricao">Descrição (opcional)</label>
+        <input id="pix-descricao" class="form-input" type="text"
+          placeholder="Ex: Almoço" />
+      </div>
+      <button class="btn btn-primary btn-full" onclick="App.confirmarPix()">Continuar</button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════
+       TELA: BOLETO
+  ════════════════════════════════════════════════ -->
+  <div id="tela-boleto" class="tela">
+    <header class="app-header">
+      <button class="btn-voltar" onclick="App.ir('dashboard')">← Voltar</button>
+      <div class="logo">Boleto</div>
+      <div style="width:60px"></div>
+    </header>
+    <div class="form-transacao">
+      <h2>Pagar Boleto</h2>
+      <p>Pague contas, faturas e carnês</p>
+      <div class="form-group">
+        <label class="form-label" for="boleto-codigo">Código de barras</label>
+        <input id="boleto-codigo" class="form-input" type="text"
+          placeholder="00000.00000 00000.000000 00000.000000 0 00000000000000" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="boleto-descricao">Descrição</label>
+        <input id="boleto-descricao" class="form-input" type="text"
+          placeholder="Ex: Conta de luz" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="boleto-valor">Valor (R$)</label>
+        <input id="boleto-valor" class="form-input" type="number"
+          placeholder="0,00" min="0.01" step="0.01" />
+      </div>
+      <button class="btn btn-primary btn-full" onclick="App.confirmarBoleto()">Continuar</button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════
+       TELA: TED
+  ════════════════════════════════════════════════ -->
+  <div id="tela-ted" class="tela">
+    <header class="app-header">
+      <button class="btn-voltar" onclick="App.ir('dashboard')">← Voltar</button>
+      <div class="logo">Transferência</div>
+      <div style="width:60px"></div>
+    </header>
+    <div class="form-transacao">
+      <h2>Transferência TED</h2>
+      <p>Transferência para outros bancos</p>
+      <div class="form-group">
+        <label class="form-label" for="ted-nome">Nome do favorecido</label>
+        <input id="ted-nome" class="form-input" type="text" placeholder="Nome completo" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="ted-agencia">Agência</label>
+        <input id="ted-agencia" class="form-input" type="text" placeholder="0000" maxlength="4" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="ted-conta">Conta</label>
+        <input id="ted-conta" class="form-input" type="text" placeholder="00000-0" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="ted-valor">Valor (R$)</label>
+        <input id="ted-valor" class="form-input" type="number"
+          placeholder="0,00" min="0.01" step="0.01" />
+      </div>
+      <button class="btn btn-primary btn-full" onclick="App.confirmarTed()">Continuar</button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════
+       TELA: CARTÃO
+  ════════════════════════════════════════════════ -->
+  <div id="tela-cartao" class="tela">
+    <header class="app-header">
+      <button class="btn-voltar" onclick="App.ir('dashboard')">← Voltar</button>
+      <div class="logo">Meu Cartão</div>
+      <div style="width:60px"></div>
+    </header>
+    <div id="cartao-visual-container"></div>
+    <div class="card">
+      <p class="card-titulo">Detalhes</p>
+      <div id="cartao-detalhes"></div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════
+       TELA: PERFIL
+  ════════════════════════════════════════════════ -->
+  <div id="tela-perfil" class="tela">
+    <header class="app-header">
+      <button class="btn-voltar" onclick="App.ir('dashboard')">← Voltar</button>
+      <div class="logo">Perfil</div>
+      <div style="width:60px"></div>
+    </header>
+    <div class="perfil-avatar">👤</div>
+    <p class="perfil-nome" id="perfil-nome"></p>
+    <p class="perfil-email" id="perfil-email"></p>
+    <div class="card">
+      <p class="card-titulo">Dados pessoais</p>
+      <div id="perfil-dados"></div>
+    </div>
+    <div class="card">
+      <p class="card-titulo">Chaves PIX</p>
+      <div id="perfil-pix"></div>
+    </div>
+    <div style="padding:0 14px 14px">
+      <button class="btn btn-danger btn-full" onclick="App.logout()">Sair da conta</button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════
+       TELA: CHAVES PIX
+  ════════════════════════════════════════════════ -->
+  <div id="tela-chaves-pix" class="tela">
+    <header class="app-header">
+      <button class="btn-voltar" onclick="App.ir('perfil')">← Voltar</button>
+      <div class="logo">Chaves PIX</div>
+      <div style="width:60px"></div>
+    </header>
+    <div class="card" style="margin-top:14px">
+      <p class="card-titulo">Minhas chaves</p>
+      <div id="chaves-pix-lista"></div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════
+       BOTTOM NAV
+  ════════════════════════════════════════════════ -->
+  <nav class="bottom-nav" id="bottom-nav" style="display:none">
+    <button onclick="App.ir('dashboard')" id="nav-home">
+      <span class="icon">🏠</span>Home
+    </button>
+    <button onclick="App.ir('extrato')" id="nav-extrato">
+      <span class="icon">📋</span>Extrato
+    </button>
+    <button onclick="App.ir('pix')" id="nav-pix">
+      <span class="icon">📲</span>PIX
+    </button>
+    <button onclick="App.ir('cartao')" id="nav-cartao">
+      <span class="icon">💳</span>Cartão
+    </button>
+    <button onclick="App.ir('perfil')" id="nav-perfil">
+      <span class="icon">👤</span>Perfil
+    </button>
+  </nav>
+
+  <!-- ════════════════════════════════════════════════
+       AGENTE IA — Widget fixo na base (acima da nav)
+  ════════════════════════════════════════════════ -->
+  <div id="agente-widget">
+    <!-- Barra de toggle -->
+    <div class="chat-toggle-bar" onclick="AgenteUI.toggle()">
+      <div class="chat-toggle-info">
+        <div class="chat-avatar-sm">🤖</div>
+        <div>
+          <div class="chat-agent-name">Nova — Assistente IA</div>
+          <div class="chat-agent-sub">● Online · Clique para conversar</div>
+        </div>
+      </div>
+      <span class="chat-chevron">▲</span>
+    </div>
+
+    <!-- Corpo expansível -->
+    <div class="chat-body">
+      <div class="chat-mensagens" id="chat-msgs"></div>
+      <div class="chat-sugestoes" id="chat-sugestoes"></div>
+      <div class="chat-input-area">
+        <input id="chat-input" class="chat-input" type="text"
+          placeholder="O que você quer fazer?" />
+        <button class="chat-enviar" onclick="AgenteUI.enviar()">➤</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════
+       OVERLAY DE CONFIRMAÇÃO
+  ════════════════════════════════════════════════ -->
+  <div class="confirm-overlay" id="confirm-overlay">
+    <div class="confirm-sheet">
+      <p class="confirm-titulo">Confirmar transação</p>
+      <div id="confirm-detalhes"></div>
+      <div class="confirm-acoes">
+        <button class="btn btn-outline" onclick="App.fecharConfirm()">Cancelar</button>
+        <button class="btn btn-success" id="confirm-btn-ok">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════
+       OVERLAY DE SUCESSO
+  ════════════════════════════════════════════════ -->
+  <div class="sucesso-overlay" id="sucesso-overlay">
+    <div class="sucesso-icone">✅</div>
+    <p class="sucesso-titulo" id="sucesso-titulo">Pronto!</p>
+    <p class="sucesso-sub" id="sucesso-sub"></p>
+    <button class="btn btn-primary" onclick="App.fecharSucesso()">Voltar ao início</button>
+  </div>
+
+  <!-- ════════════════════════════════════════════════
+       ALERTA
+  ════════════════════════════════════════════════ -->
+  <div class="alerta" id="alerta"></div>
+
+</div><!-- /app -->
+</div><!-- /phone-frame -->
+
+<script src="js/agente.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
